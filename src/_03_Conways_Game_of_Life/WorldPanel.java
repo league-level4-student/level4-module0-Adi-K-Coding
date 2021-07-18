@@ -29,25 +29,45 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 		this.cellsPerRow = cpr;
 
 		// 2. Calculate the cell size.
-		
+		cellSize = w / cellsPerRow;
 		// 3. Initialize the cell array to the appropriate size.
-
+		cells = new Cell[w][h];
 		// 3. Iterate through the array and initialize each cell.
 		// Don't forget to consider the cell's dimensions when
 		// passing in the location.
-
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				cells[i][j] = new Cell(i, j, cellSize);
+			}
+		}
 	}
 
 	public void randomizeCells() {
 		// 4. Iterate through each cell and randomly set each
 		// cell's isAlive memeber to true of false
+		Random rand = new Random();
 
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				int x = rand.nextInt(1);
+				if (x == 0) {
+					cells[i][j].isAlive = true;
+				} else {
+					cells[i][j].isAlive = false;
+				}
+
+			}
+		}
 		repaint();
 	}
 
 	public void clearCells() {
 		// 5. Iterate through the cells and set them all to dead.
-
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				cells[i][j].isAlive = false;
+			}
+		}
 		repaint();
 	}
 
@@ -66,7 +86,11 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	@Override
 	public void paintComponent(Graphics g) {
 		// 6. Iterate through the cells and draw them all
-
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				cells[i][j].draw(g);
+			}
+		}
 		// draws grid
 		g.setColor(Color.BLACK);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
@@ -78,8 +102,13 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 		// . using the getLivingNeighbors method.
 		int[][] livingNeighbors = new int[cellsPerRow][cellsPerRow];
 
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				livingNeighbors[i][j] = getLivingNeighbors(i, j);
+			}
+		}
 		// 8. check if each cell should live or die
-
+//according to rules if number of neibors is too high, alive=false, else alive=true
 		repaint();
 	}
 
